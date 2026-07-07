@@ -1,0 +1,243 @@
+:root {
+  --bg: #0f1115;
+  --panel: #181b22;
+  --accent: #4aa3ff;
+  --text: #e6e8ec;
+  --muted: #8a8f99;
+  --win: #22c55e;
+  --tie: #3b82f6;
+  --loss: #ef4444;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 820px;
+  padding: 20px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.board-wrap {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+#board {
+  width: 100%;
+  max-width: 680px;
+  aspect-ratio: 1 / 1;
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+  border-radius: 4px;
+}
+
+.status {
+  margin: 14px 0;
+  padding: 10px 14px;
+  background: #14171e;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 15px;
+  min-height: 24px;
+}
+
+.status.busy {
+  color: #fff;
+}
+
+.status.error {
+  color: #fecaca;
+  background: #3b1518;
+  border: 1px solid #7f1d1d;
+}
+
+.retry-inline {
+  margin-left: 10px;
+  padding: 3px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #b91c1c;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  vertical-align: 1px;
+}
+
+.retry-inline:hover {
+  background: #dc2626;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid rgba(255,255,255,0.28);
+  border-top-color: #fff;
+  border-radius: 50%;
+  vertical-align: -2px;
+  animation: spin .8s linear infinite;
+}
+
+.last-placement-ring {
+  animation: placement-pulse 1.15s ease-out infinite;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.mode-segment {
+  margin: 0;
+  padding: 3px;
+  border: 1px solid #333a45;
+  border-radius: 10px;
+  background: #1e222b;
+  display: inline-flex;
+  gap: 3px;
+}
+
+.mode-segment legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mode-segment input[type='radio'] {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mode-segment label {
+  padding: 6px 10px;
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.mode-segment input[type='radio']:checked + label {
+  background: #2d6fc2;
+  color: #fff;
+}
+
+button {
+  background: #22262f;
+  color: var(--text);
+  border: 1px solid #333a45;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .1s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #2a2f3a;
+  border-color: #4a5160;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: #3a8be0;
+}
+
+button.primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.info {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.hint-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  vertical-align: -1px;
+  margin-right: 4px;
+}
+.dot.win { background: var(--win); }
+.dot.tie { background: var(--tie); }
+.dot.loss { background: var(--loss); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes placement-pulse {
+  0% {
+    opacity: 1;
+    stroke-width: 0.11;
+  }
+  70% {
+    opacity: .35;
+    stroke-width: 0.04;
+  }
+  100% {
+    opacity: 1;
+    stroke-width: 0.11;
+  }
+}
+
+footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+}
+footer a { color: #666; }

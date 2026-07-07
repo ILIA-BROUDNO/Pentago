@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pentago</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Pentago</h1>
+    <div class="subtitle">Human vs perfect computer • Uses perfect-pentago.net data &amp; WASM</div>
+
+    <div class="board-wrap">
+      <svg id="board" viewBox="-3.6 -3.6 7.2 7.2" preserveAspectRatio="xMidYMid meet"></svg>
+
+      <div id="status" class="status">Loading…</div>
+
+      <div class="controls">
+        <fieldset class="mode-segment" aria-label="Game mode">
+          <legend>Mode</legend>
+          <input id="mode-1p" type="radio" name="player-mode" value="1" checked />
+          <label for="mode-1p">1 Player</label>
+          <input id="mode-2p" type="radio" name="player-mode" value="2" />
+          <label for="mode-2p">2 Players</label>
+        </fieldset>
+        <button id="btn-heur-move">AI Move</button>
+        <button id="btn-new">New Game (You Black)</button>
+        <button id="btn-new-white">New Game (You White)</button>
+        <button id="btn-undo">Undo</button>
+        <button id="btn-hint">Toggle Hints</button>
+      </div>
+
+      <div class="hint-legend">
+        <div><span class="dot win"></span> Win for player to move</div>
+        <div><span class="dot tie"></span> Tie</div>
+        <div><span class="dot loss"></span> Loss for player to move</div>
+      </div>
+    </div>
+
+    <div class="info">
+      Early game (≤17 stones): queries the public perfect-play API from perfect-pentago.net<br>
+      Late game (18+ stones): runs the official midgame WASM solver entirely in your browser.<br>
+      No server of our own. Pure client + their free light-traffic API.
+    </div>
+
+    <footer>
+      Built to reuse the strongly solved results from <a href="https://perfect-pentago.net" target="_blank">perfect-pentago.net</a>
+      (Geoffrey Irving). Please be respectful of the public API.
+    </footer>
+  </div>
+
+  <script type="module" src="main.js?v=20260707-10"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Pentago • Perfect Single Player (No Backend)
+# Pentago • Solved AI
 
 A clean, hostable, single-player Pentago game (human vs perfect computer) that reuses the strongly solved results from https://perfect-pentago.net.
 
