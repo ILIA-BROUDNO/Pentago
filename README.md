@@ -7,7 +7,6 @@ A clean, hostable, single-player Pentago game (human vs perfect computer) that r
 - **Early game (0–17 stones)**: The app calls the public Cloud Function API from the original project. This uses their 3.7 TB perfect database.
 - **Late game (18+ stones)**: The official `mid.wasm` (from Geoffrey Irving) runs entirely in the browser. No database, no server.
 
-You do **not** host the 3.7 TB data. You only make light API calls for the opening/midgame and do heavy lifting client-side with WASM.
 
 ## Files
 
@@ -36,16 +35,6 @@ python -m http.server 8080
 ```
 
 Open http://localhost:8080
-
-## Deploy (free)
-
-- GitHub Pages (free)
-- Netlify (drag folder or git)
-- Vercel
-- Cloudflare Pages
-- Any static host
-
-Just upload the whole folder (including `mid.wasm`).
 
 ## Notes & respect
 
