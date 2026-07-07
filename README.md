@@ -13,11 +13,15 @@ You do **not** host the 3.7 TB data. You only make light API calls for the openi
 
 - `index.html` – the page
 - `style.css`
-- `main.js` – UI, SVG board, input
-- `game.js` – game flow, human vs AI turns
-- `board.js` – board representation + move generation
-- `solver.js` – chooses between API and WASM automatically
+- `main.js` – UI, rendering, input handling, game orchestration
+- `game.js` – high-level game state and flow
+- `board.js` – board model, move generation, parsing
+- `solver.js` – perfect play (API for early game, WASM for 18+), caching
+- `wasm-solve.js` – shared WebAssembly midgame solver
+- `mid-worker.js` – Web Worker for responsive WASM solves
+- `heuristics.js` – fast local move selection
 - `mid.wasm` – the official midgame perfect solver (vendored, ~11 KB)
+- `favicon.svg`
 
 ## Run locally
 
