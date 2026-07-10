@@ -984,73 +984,76 @@ async function doUndo() {
   if (game.history.length <= 1) return;
   undoing = true;
   try {
-  // Undo behavior:
-  // - 2-player mode: undo one move (1 ply).
-  // - 1-player mode: undo back to the human's turn. We can't rely on
-  //   game.isHumanTurn() here because it returns false once the game is over,
-  //   which would leave us stranded on the AI's turn after undoing a win.
-  const originalHistory = game.history.slice();
-  const originalAnimLog = undoAnimLog.slice();
-  const maxPop = Math.max(0, originalHistory.length - 1);
+    // Undo behavior:
+    // - 2-player mode: undo one move (1 ply).
+    // - 1-player mode: undo back to the human's turn. We can't rely on
+    //   game.isHumanTurn() here because it returns false once the game is over,
+    //   which would leave us stranded on the AI's turn after undoing a win.
+    const originalHistory = game.history.slice();
+    const originalAnimLog = undoAnimLog.slice();
+    const maxPop = Math.max(0, originalHistory.length - 1);
 
-  const humanToMoveOn = (name) => {
-    const b = parseBoard(name);
-    const currentIsBlack = !b.turn; // turn false = black to move
-    return (currentIsBlack && game.humanIsBlack) || (!currentIsBlack && !game.humanIsBlack);
-  };
+    const humanToMoveOn = (name) => {
+      const b = parseBoard(name);
+      const currentIsBlack = !b.turn; // turn false = black to move
+      return (currentIsBlack && game.humanIsBlack) || (!currentIsBlack && !game.humanIsBlack);
+    };
 
-  let popCount;
-  if (playerMode === 2) {
-    popCount = Math.min(1, maxPop);
-  } else {
-    // Undo at least one ply, then keep going until the human is to move.
-    popCount = Math.min(1, maxPop);
-    while (popCount < maxPop && !humanToMoveOn(originalHistory[originalHistory.length - 1 - popCount])) {
-      popCount++;
+    let popCount;
+    if (playerMode === 2) {
+      popCount = Math.min(1, maxPop);
+    } else {
+      // Undo at least one ply, then keep going until the human is to move.
+      popCount = Math.min(1, maxPop);
+      while (popCount < maxPop && !humanToMoveOn(originalHistory[originalHistory.length - 1 - popCount])) {
+        popCount++;
+      }
     }
-  }
-  const targetHistory = originalHistory.slice(0, originalHistory.length - popCount);
-  const targetAnimLog = originalAnimLog.slice(0, Math.max(0, originalAnimLog.length - popCount));
-  const prevName = targetHistory[targetHistory.length - 1];
+    const targetHistory = originalHistory.slice(0, originalHistory.length - popCount);
+    const targetAnimLog = originalAnimLog.slice(0, Math.max(0, originalAnimLog.length - popCount));
+    const prevName = targetHistory[targetHistory.length - 1];
 
-  // Animate each undone ply from newest -> oldest
-  for (let i = originalHistory.length - 1; i >= targetHistory.length; i--) {
-    const currentBoard = parseBoard(originalHistory[i]);
-    const previousBoard = parseBoard(originalHistory[i - 1]);
-    const moveMeta = originalAnimLog[i - 1] || null;
-    await animateUndoTransition(previousBoard, currentBoard, moveMeta);
-  }
+    // Animate each undone ply from newest -> oldest
+    for (let i = originalHistory.length - 1; i >= targetHistory.length; i--) {
+      const currentBoard = parseBoard(originalHistory[i]);
+      const previousBoard = parseBoard(originalHistory[i - 1]);
+      const moveMeta = originalAnimLog[i - 1] || null;
+      await animateUndoTransition(previousBoard, currentBoard, moveMeta);
+    }
 
-  const newGame = new PentagoGame();
-  newGame.reset(game.humanIsBlack, playerMode);
-  newGame.board = parseBoard(prevName);
-  newGame.history = targetHistory.slice();
-  newGame.gameOver = newGame.board.done;
-  newGame.pendingPlace = null;
-  if (playerMode === 2) {
-    newGame.message = newGame.board.currentPlayer === 1 ? 'Black to move' : 'White to move';
-  } else {
-    newGame.message = newGame.isHumanTurn() ? 'Your turn' : 'Perfect AI is thinking...';
-  }
+    const newGame = new PentagoGame();
+    newGame.reset(game.humanIsBlack, playerMode);
+    newGame.board = parseBoard(prevName);
+    newGame.history = targetHistory.slice();
+    newGame.gameOver = newGame.board.done;
+    newGame.pendingPlace = null;
+    if (playerMode === 2) {
+      newGame.message = newGame.board.currentPlayer === 1 ? 'Black to move' : 'White to move';
+    } else {
+      newGame.message = newGame.isHumanTurn() ? 'Your turn' : 'Perfect AI is thinking...';
+    }
 
-  game = newGame;
-  gameEpoch++;
-  undoAnimLog = targetAnimLog.slice();
-  hintValues = null;
-  lastPlacement = null;
-  statusError = null;
-  // Clear any transient busy flags so an undo always lands in a clean, enabled
-  // state (mirrors startNew); the hint refresh below manages its own flag.
-  thinking = false;
-  animating = false;
-  rotationAnim = null;
-  if (showHints && game.isHumanTurn() && !game.getStatus().gameOver) {
-    refreshHints({ blockInput: true });
-  } else {
-    render();
-  }
+    game = newGame;
+    gameEpoch++;
+    undoAnimLog = targetAnimLog.slice();
+    hintValues = null;
+    lastPlacement = null;
+    statusError = null;
+    // Clear any transient busy flags so an undo always lands in a clean, enabled
+    // state (mirrors startNew); the hint refresh below manages its own flag.
+    thinking = false;
+    animating = false;
+    rotationAnim = null;
+    if (showHints && game.isHumanTurn() && !game.getStatus().gameOver) {
+      refreshHints({ blockInput: true });
+    } else {
+      render();
+    }
   } finally {
     undoing = false;
+    // The last render/sync may have happened while undoing was still true.
+    // Re-render after clearing the flag so button disabled state is correct.
+    render();
   }
 }
 

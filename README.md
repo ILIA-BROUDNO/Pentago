@@ -31,10 +31,10 @@ cd C:\Personal\Pentago
 # Use any static file server, e.g.
 npx serve .
 # or
-python -m http.server 8080
+python -m http.server 1234
 ```
 
-Open http://localhost:8080
+Open http://localhost:1234
 
 ## Notes & respect
 
